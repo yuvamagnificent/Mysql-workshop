@@ -1,0 +1,596 @@
+show databases;
+
+use yuva;
+-- 02-07-2024 
+-- ASSIGNMENT 
+create table emp (
+emp_no int primary key not null,
+ename varchar(10),
+job varchar(10),
+mgr int not null,
+hiredate date,
+sal int(20),
+comm int,
+dept_no int, 
+foreign key (dept_no) references dept(dept_no)
+);
+create table dept(
+dept_no int primary key not null,
+dname varchar(20),
+loc varchar(20));
+ select * from  emp; 
+
+ insert into dept values(10, 'accounting' , 'new york');
+ insert into dept values(20, 'research' , 'dallas');
+ insert into dept values(30, 'sales' , 'chicago');
+ insert into dept values(40, 'operations' , 'boston');
+ 
+insert into emp values(7499, 'allen', 'salesman', 7698, '1981-02-20', 1600, 300, 30);
+insert into emp values(7521, 'ward', 'salesman', 7698, '1981-02-22', 1250, 500, 30);
+insert into emp values(7566, 'jones', 'manager', 7839, '1981-04-02', 2975, null, 20);
+insert into emp values(7654, 'martin', 'salesman', 7698, '1981-09-28', 1250, 1400, 30);
+insert into emp values(7698, 'blake', 'manager', 7839, '1981-05-01', 2850, null, 30);
+insert into emp values(7782, 'clark', 'manager', 7839, '1981-06-09', 2450, null, 10);
+insert into emp values(7788, 'scott', 'analyst', 7566, '1987-04-19', 3000, null, 20);
+insert into emp values(7839, 'king', 'president', 0 , '1981-11-17', 5000, null, 10);
+insert into emp values(7845, 'turner', 'salesman', 7698, '1981-09-08', 1500, '0', 30);
+insert into emp values(7876, 'adams', 'clerk', 7788, '1987-05-23', 1100, null, 20);
+insert into emp values(7900, 'james', 'clerk', 7698, '1981-12-03', 950, null, 30);
+insert into emp values(7902, 'ford', 'analyst', 7566, '1981-04-02', 3000, null, 20);
+insert into emp values(7934, 'miller', 'clerk', 7782, '1982-01-23', 1300, null, 10);
+select * from emp;
+/* 1. WAQTD name of the employee along with their date of joining */
+select ename, hiredate from emp;
+
+/* 2. WAQTD all the details of the employee along with anual salary */
+select * , sal* 12 as anual_salary from emp;
+
+/* 3.WAQTD name and salary with a hike of 20% */
+select ename, sal from emp where sal + (sal * 0.2);
+
+/* 4. WAQTD wmployee names and hiredate of the employee who hired after 1985 */
+select ename, hiredate from emp
+where hiredate > '1985-12-31';
+
+/* 5. WAQTD ename, dept_no along with job working as manager in dept_no is 10 */
+select ename, dept_no 
+from emp
+where job = 'manager' and dept_no = 10;
+
+/* 6. WAQTD emp sal and dept_no of emp if emp get more than 1250 but less than 4000
+ salary and works in dept 10*/
+select sal, dept_no
+from emp
+where sal between 1250 and 4000 and dept_no = 10;
+
+/* 7. WAQTD emp name, job, dept_no of the employee working as clerk or salesman in dept 10, 30 and earning more than 1800 */
+select ename, job, dept_no
+from emp
+where job in ('clerk', 'salesman')
+and 
+dept_no in (10,30)
+and sal > 1800;
+
+/* 8. WAQTD ename, dept_no of all the emp except the emp working in dept_no 10, 40 */
+select ename, dept_no
+from emp
+where dept_no not in (10, 40);
+
+/* 9. WAQTD details of the employee along with anual salary if they are working in department 30 as salesman 
+and there anual salery > 10,000 */
+select *, dept_no, sal * 12 as anual_salary 
+from emp
+where dept_no = 30 and job = 'salesman' and sal*12 > 10000;
+/* ---10. WAQTD name, salary, anual salary, dept_no if dept_no is 20 and earning more 
+than 10,000 and anual salary exceeds 12000*/
+select ename, sal, dept_no, sal * 12 as anual_salary
+ from emp
+ where dept_no = 20 
+ and sal > 10000
+ and sal*12 >  12000;
+ 
+ 
+ /* 11. WAQTD name, salary of emp if the emplyee is not earning in range 10,000 to 3,000*/
+ select ename, sal
+ from emp
+ where sal not between '10000' and '3000';
+ 
+ /* 12. WAQTD name, salary and hiredate of the employee hired durning 2017 into dept_no 20 with a salary greater than 2000 */
+ select ename, sal, hiredate 
+ from emp
+ where hiredate between '1980-12-31' and '1982-01-01' 
+ and dept_no = 20 
+ and sal > 2000;
+
+
+
+
+
+-- 03-07-2024
+/*LIKE OPERATOR */
+/* 13. WAQTD ename start with s */
+select ename 
+from emp
+where ename like 's%' ;
+
+/* 14. WAQTD ename  ends with a */
+select ename 
+from emp 
+where ename like '%a';
+
+/* 15.  WAQTD ename second character should be M */
+select ename 
+from emp
+where ename like '_m%';
+
+/*  16. WAQTD ename who hired in the month of April */
+select ename 
+from emp 
+where hiredate like '%-04-%';
+
+/* 17. WAQTD the name of emp of the emp has character 'a' present atleast 2 times */
+select ename 
+from emp
+where ename like '%a%a%';
+
+/* 18. WAQTD no. of emp having character e in their names */
+select count(comm)
+from emp
+where ename like '%a%';
+ /* or */
+ select count(*)
+ from emp 
+ where ename like '%a%';
+ 
+ /* 19. WAQTD average salary, total salary , number of employee and maximun salary given to a employee working as president*/
+ select avg(sal), sum(sal), count(emp_no), max(sal)
+ from emp 
+ where job = 'president';
+ 
+ /* GROUP BY CLAUSE */
+ /* 10. WAQTD max sal group by dept */
+ Select dept_no, max(sal)
+ from emp 
+ group by dept_no;
+ 
+/* 11. WAQTD the maximum sal group by job */
+select job, max(sal)
+from emp
+group by job;
+  /* 12. WAQTD job, dept, and ma*/
+ select job, dept_no, max(sal)
+ from emp 
+ group by dept_no, job;
+ 
+ /* 13. WAQTD no of emp in each job with a emp as character a in their names (each = grop by clause) */
+ select count(ename),job
+ from emp 
+ where ename like '%a%'
+ group by job;
+ 
+  -- ORDER BY CLAUSE 
+  /* 14. WAQTD dept_no, maximum sal with emp as character a in their name and group them by job, 
+  dept_no and order in desceding order */
+ select dept_no, max(sal)
+ from emp 
+ where ename like '%a%'
+ group by job, dept_no
+ order by job desc;
+ 
+ -- HAVING CLAUSE 
+ /* 15. WAQTD to find no of emp working in each dept no if there are atleast 3 emp in each dept */
+ Select dept_no, count(*)
+ from emp 
+ group by dept_no
+ having count(dept_no) >= 3;
+ 
+ /* 16. WAQTD the list of ename stating with vowels from emp */
+ select ename 
+ from emp
+ where substring(ename, 1, 1) in ('a', 'e', 'i', 'o', 'u');
+ 
+  /* 17. WAQTD the list of ename ending with vowels from emp */
+  select ename 
+ from emp
+ where substring(ename, -1, 1) in ('a', 'e', 'i', 'o', 'u');
+
+/* 18. WAQTD the names of the employee earning same as miller */
+select ename
+from emp
+where sal = (
+select sal
+from emp 
+where ename = 'miller');
+ 
+ /* 19. WAQTD name and department no of emp working in same dept as smith*/
+ select ename,dept_no 
+ from emp 
+ where dept_no=(select dept_no
+ from emp 
+ where ename = 'smith');
+ 
+ /* 20. WAQTD name and hiredate of the employeee was hired after jones */
+ select ename, hiredate 
+ from emp 
+ where hiredate > (
+ select hiredate 
+ from emp 
+ where ename = 'jones');
+  
+/* 21. WAQTD name, sal, dep_no of emp if the emp earning more than 2000 and working in the department same as james */
+select ename, sal, dept_no
+from emp 
+where sal > 2000 and dept_no = (
+select dept_no 
+from emp 
+where ename = 'james');
+
+/* 22.  WAQTD details of emp earning more than smith and less than king */
+select * 
+from emp 
+where sal = (
+select sal
+from emp
+where sal > 'smith' and sal < 'king');
+ 
+/* 23. WAQTD name of the emp working in the department same as james and earning 
+more than smith and working in the job role same as miller and hired after martin */
+select ename 
+from emp 
+where dept_no =
+ (select dept_no  
+ from emp 
+ where ename = 'james' and sal> (
+ select ename 
+ from emp 
+ where ename = 'smith' and job = (
+ select job 
+ from emp 
+ where ename = 'miller' and hiredate > (
+ select hiredate 
+from emp 
+where ename = 'martin'))));
+
+ /* 24. WAQTD name of the emp whose name is miller */
+ select dname 
+ from dept
+ where dept_no = (select dept_no 
+ from emp 
+ where ename = 'miller');
+ 
+ /* 25. WAQTD no of emp working in dept accounting */
+ select count(ename)
+ from emp 
+ where dept_no =(select dept_no
+ from dept 
+ where dname = 'accounting');
+ 
+/* 26. WAQTD all the details of the emp working in the destination same as miller and works 
+ in new york location */
+ select *
+ from emp 
+ where job = (
+ select job 
+ from emp 
+ where ename = 'miller' )and loc=(
+ select loc 
+ from dept
+ where loc = 'new york');
+ 
+  /* ASSIGNMENT QUERIES 
+  03-07-2024 */
+/* (27) 51. WAQTD name of the emp earning sal more than the salesman */
+ select ename 
+ from emp 
+ where sal > (
+ select max(sal)
+ from emp 
+ where job = 'salesman');
+ -- or
+ select ename 
+ from emp 
+ where sal > all(
+ select sal
+ from emp
+ where job = 'salesman');
+ 
+ 
+/* (28) 52. WAQTD details  of the emp hired after clerk */
+ select *  
+ from emp
+ where hiredate > (
+ select max(hiredate)
+ from emp
+ where job = 'clerk');
+ -- or
+ select * 
+ from emp 
+ where hiredate > all (
+ select hiredate 
+ from emp 
+ where job = 'clerk');
+ 
+ 
+/* (29) 53. WAQTD name and salary for all the emp if they are earning less than atleast a manager */
+ select ename, sal
+ from emp 
+ where sal < (
+ select min(sal)
+ from emp 
+ where job = 'manager');
+ -- or 
+ select ename, sal
+ from emp 
+ where sal <  any(
+ select sal
+ from emp 
+ where job ='manager');
+ 
+ 
+/* (30) 54. WAQTD name and hire date of the emp hired before all the manager */
+ select ename
+ from emp 
+ where hiredate < (
+ select min(hiredate)
+ from emp 
+ where job = 'manager');
+ -- or 
+ select ename
+ from emp 
+ where hiredate < all (
+ select hiredate 
+ from emp 
+ where job = 'manager');
+ 
+ 
+/* (31) 55. WAQTD names of the emp hired after all the manager and earning salary more than all the clerk */
+ select ename 
+ from emp
+ where hiredate >(
+ select max(hiredate)
+ from emp 
+ where job = 'manager' and sal > (
+ select max(sal)
+ from emp 
+ where job = 'clerk'));
+ -- or 
+ 
+ 
+/* (32) 56. WAQTD Details of the emp working as clerk and hired before atleast a salesman */
+ select *
+ from emp 
+ where job = 'clerk' and hiredate < (
+ select min(hiredate)
+ from emp 
+ where job ='salesman');
+ 
+/* (33) 57. WAQTD details of emp working in accounting or sales dept */
+ select * 
+ from emp 
+ where dept_no = any(
+ select dept_no 
+ from dept 
+ where dname in('accounting' , 'sales') );
+ 
+/* (34) 58. WAQTD dept names of the emp with name smith, king, miller */
+	Select dname 
+    from dept 
+    where dept_no = any (
+    select dept_no 
+    from emp 
+    where ename = 'smith' or ename ='king' or ename = 'miller');
+    
+/* (35) 59. WAQTD details of employee working in new york or chicago */
+    select * 
+    from emp 
+    where dept_no = any (
+    select dept_no 
+    from dept 
+    where loc = 'new york' or 'chicago');
+   
+/* (36) 60. WAQTD emp names if emp are hired after all the emp of dept 10 */
+   select ename 
+   from emp 
+   where hiredate > all(
+   select hiredate 
+   from emp 
+   where dept_no = 10);
+   
+   -- 04-07-2024
+   
+/* 37.  WAQTD second highest salary of emplyoee */ 
+   select max(sal)
+   from emp 
+   where sal < 
+   ( select max(sal)
+   from emp);
+   
+/* 38.  WAQTD third highest salary of emplyoee */ 
+   select max(sal)
+   from emp 
+   where sal < 
+   ( select max(sal)
+   from emp 
+   where sal <
+   (select max(sal)
+   from emp));
+   
+/* 39.  WAQTD second lowest salary of emplyoee */ 
+   select min(sal)
+   from emp 
+   where sal > 
+   (select min(sal)
+   from emp);
+   
+   -- JOINS 
+   -- cross join/ cartesian join 
+/* 40. WAQTD the cross join of 2 tables */
+   Select e.ename, d.dept_no 
+   from emp e
+   cross join dept d;
+   -- inner join
+/* 41. WAQTD ename, department name for all the employee using inner join */
+   select e.ename, d.dname 
+   from emp e inner join dept d
+   on e.dept_no = d.dept_no;
+   
+/* 42. WAQTD ename and location of all the employee working as manager using inner join */
+   select e.ename, d.loc 
+   from emp e inner join dept d 
+   on e.dept_no = d.dept_no where job ='manager';
+   
+/* 43. WAQTD the employess name and their salary along with their dept names */
+   select e.ename, e.sal, d.dname
+   from emp e inner join dept d
+   on e.dept_no = d.dept_no ;
+   
+/* 44. WAQTD dname and salary for all the employee working in accounting */
+   select d.dname, e.sal 
+   from emp e inner join dept d 
+   on e.dept_no = d.dept_no
+   where dname = 'accounting';
+/*45.  WAQTD dname and job for all the employees whose job and dname starts with character s */
+   select e.ename, d.dname, e.job 
+   from emp e inner join dept d 
+   on e.dept_no= d.dept_no
+   where job like 's%' and dname like 's%' ;
+/* WAQTD right join of emp and dept table and do the same for all the joins  */
+select * 
+from emp e right join dept d
+on e.dept_no = d.dept_no ;
+
+select * 
+from emp e left join dept d
+on e.dept_no = d.dept_no ;
+
+/* full join cant be performed in mysql so we have to use left join and right join in
+ single query using sub query */
+select *
+from emp e left join dept d
+on e.dept_no = d. dept_no union all(
+select * 
+from emp e right join dept d 
+on e.dept_no = d.dept_no);
+
+-- SELF JOIN 
+/* */
+select * 
+from emp e1  join emp e2
+on e1.mgr = e2.emp_no;
+
+/* */
+select * 
+from emp e1,emp e2
+where e1.mgr = e2.emp_no;
+
+/* WAQTD ename salary along with manager's name and manager salary for all the empolyee */
+select e1.ename, e1.sal, e2.ename, e2.sal
+from emp e1 join emp e2 
+on e1.mgr = e2.emp_no; 
+
+/*WAQTD ename, manager's name along with their department no if employee is working as clerk */
+select e1.ename, e2.ename, e1.dept_no, e1.job
+from emp e1 join emp e2
+on e1.mgr = e2.emp_no
+where e1.job = 'clerk';
+
+/*WAQTD ename, manager's job if manager works as analyst */
+select e1.ename, e2.ename, e2.job 
+from emp e1 join emp e2
+on e1.mgr = e2.emp_no 
+where e2.job = 'analyst';
+
+/* WAQTD ename and managers name along with their job if emp and manager are working for same destination */
+select e1.ename, e2.ename, e1.job, e2.job 
+from emp e1 join emp e2
+on e1.mgr = e2.emp_no
+where e1.job = e2.job;
+
+/* ename, employee salary, mgr name , mgr sal if manager earns more than employee */
+select e1.ename, e1.sal, e2.ename, e2.sal
+from emp e1 join emp e2
+on e1.mgr = e2.emp_no
+where e2.sal > e1.sal;
+
+-- NATURAL JOIN 
+select *
+from emp e join dept d
+on  e.dept_no = d.dept_no ;
+-- OR 
+
+/* WAQTD name of the emp and manager desination if manager works in dept 10,20 
+
+/* WAQTD name of the employee and the managers salary if employee and manager both
+ earn more than 2300*/
+/* WAQTD emp name and mrg name along with their annual sal if emp works in
+ dept 10,20 and mgr sal > emp sal */
+/* 	WAQTD employee name and mgr salary for all the employee if manager sal ends with 50 */
+
+ -- NATURAL JOIN 
+/* List the names and salaries of employees who work in the same department as the president 
+showing each employees dept name and salary in desending order */
+select e1.ename, e1.sal, d.dname
+from emp e1
+natural join dept d 
+where e1.dept_no = ( 
+select e2.dept_no
+from emp e2
+where e2.job = 'president')
+order by e1.sal desc;
+
+-- or 
+select e.name, e.sal, d.dname
+from emp e natural join dept d
+on e.dept_no = d.dept_no
+where 
+
+/* Find the dept names and avg salary of emp in each dept whoever hired after 1890 and display 
+the department names along with avg salary in decending order of avg salary */
+-- select d.dname, avg(e.sal)
+-- from emp e 
+-- natural join dept d
+-- where hiredate <= 1890-01-01 
+-- group by d.dname
+-- order by avg(e.sal) desc;
+select d.dname, avg(e.sal)
+from emp e 
+natural join dept d
+where hiredate >= '1890-01-01'
+group by d.dname
+order by avg(e.sal) desc;
+/* Retrive the names of the emp who have the same hire date as another emp in the same department
+display the employee name and their hired dates along with their dept name (self and natural) */
+select e1.ename, e2.ename,  d.dname, e1.hiredate
+from emp e1 natural join dept d
+join emp e2
+on e1.dept_no = e2.dept_no
+and e1.hiredate = e2.hiredate
+and e1.emp_no <> e2.emp_no;
+
+
+-- 05-07-2024
+-- SINGLE ROW FUNCTION 
+-- LENGTH()
+select length(ename)
+from emp 
+where ename = 'smith';
+
+select length('smith')
+from dual;
+
+-- CONCAT()
+select concat('mr.' , ename)
+from emp 
+where ename = 'smith';
+
+-- REVERSE 
+select reverse('smith')
+from dual;
+
+-- UPPER 
+select upper('smith')
+from dual;
+
+-- LOWER 
+select lower('SMITH')
+from dual;
